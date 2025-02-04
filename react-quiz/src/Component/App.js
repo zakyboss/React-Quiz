@@ -6,6 +6,7 @@ import Error from "./Error.js";
 import StartScreen from "./StartScreen.js";
 import Question from "./Question.js";
 import NextQuestion from "./NextQuestion.js";
+import Progress from "./Progress.js";
 const initialState = {
   questions: [],
   // 'loading' , 'error' , 'ready' , 'active' , 'finished'
@@ -39,11 +40,11 @@ function reducer(state, action) {
   }
 }
 function App() {
-  const [{ questions, status, index, answerIndex }, dispatch] = useReducer(
-    reducer,
-    initialState
-  );
+  const [{ questions, status, index, answerIndex, points }, dispatch] =
+    useReducer(reducer, initialState);
+  const totalPoints = questions.reduce((acc, curr) => acc + curr.points, 0);
   const numQuestions = questions.length;
+
   useEffect(function () {
     async function fetchQuestions() {
       try {
@@ -73,13 +74,21 @@ function App() {
           <StartScreen numQuestions={numQuestions} dispatch={dispatch} />
         )}
         {status === "active" && (
-          <Question
-            question={questions[index]}
-            dispatch={dispatch}
-            answerIndex={answerIndex}
-          />
+          <>
+            <Progress
+              index={index}
+              numQuestions={numQuestions}
+              points={points}
+              totalPoints={totalPoints}
+            />
+            <Question
+              question={questions[index]}
+              dispatch={dispatch}
+              answerIndex={answerIndex}
+            />
+          </>
         )}
-         <NextQuestion dispatch={dispatch} answerIndex={answerIndex} />
+        <NextQuestion dispatch={dispatch} answerIndex={answerIndex} />
       </Main>
     </div>
   );

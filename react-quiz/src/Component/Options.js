@@ -1,7 +1,6 @@
 import React from "react";
 import "../index.css";
 export default function Options({ question, answerIndex, dispatch }) {
-  console.log(question);
   const hasAnswered = answerIndex !== null;
   return (
     <div className="options">
@@ -16,6 +15,7 @@ export default function Options({ question, answerIndex, dispatch }) {
           }`}
           onClick={() => dispatch({ type: "newAnswer", payload: i })}
           disabled={hasAnswered}
+          key={choice}
         >
           {" "}
           {choice}
