@@ -9,6 +9,7 @@ import NextQuestion from "./NextQuestion.js";
 import Progress from "./Progress.js";
 import Finished from "./FInished.js";
 import Footer from "./Footer.js";
+import Timer from "./Timer.js";
 const initialState = {
   questions: [],
   // 'loading' , 'error' , 'ready' , 'active' , 'finished'
@@ -17,7 +18,9 @@ const initialState = {
   answerIndex: null,
   points: 0,
   highscore: 0,
+  secondsRemaining: null,
 };
+const SECS_PER_QUESTION = 30;
 function reducer(state, action) {
   switch (action.type) {
     case "dataReceived":
@@ -25,7 +28,11 @@ function reducer(state, action) {
     case "dataFailed":
       return { ...state, status: "error" };
     case "startGame":
-      return { ...state, status: "active" };
+      return {
+        ...state,
+        status: "active",
+        secondsRemaining: state.questions.length * SECS_PER_QUESTION,
+      };
     case "newAnswer":
       const currQuestion = state.questions.at(state.index);
       return {
@@ -45,6 +52,7 @@ function reducer(state, action) {
         index: state.index + 1,
         highscore:
           state.points > state.highscore ? state.points : state.highscore,
+        secondsRemaining: null,
       };
     case "restartGame":
       return {
@@ -54,13 +62,27 @@ function reducer(state, action) {
         answerIndex: null,
         points: 0,
       };
+    case "tick":
+      return {
+        ...state,
+        secondsRemaining: state.secondsRemaining - 1,
+        status: state.secondsRemaining === 0 ? "finished" : state.status,
+      };
     default:
       throw new Error("Action unknown");
   }
 }
 function App() {
   const [
-    { questions, status, index, answerIndex, points, highscore },
+    {
+      questions,
+      status,
+      index,
+      answerIndex,
+      points,
+      highscore,
+      secondsRemaining,
+    },
     dispatch,
   ] = useReducer(reducer, initialState);
   const totalPoints = questions.reduce((acc, curr) => acc + curr.points, 0);
@@ -123,6 +145,11 @@ function App() {
               highscore={highscore}
               dispatch={dispatch}
             />
+          )}
+          {status === "active" ? (
+            <Timer secondsRemaining={secondsRemaining} dispatch={dispatch} />
+          ) : (
+            ""
           )}
         </Footer>
       </Main>
