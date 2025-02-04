@@ -1,5 +1,23 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useEffect } from "react";
-export default function Timer({ status }) {
-  return <div className="timer">05:00</div>;
+export default function Timer({ secondsRemaining, dispatch }) {
+  const mins = Math.floor(secondsRemaining / 60);
+  const secs = secondsRemaining % 60;
+  useEffect(
+    function () {
+      const id = setInterval(function () {
+        dispatch({ type: "tick" });
+      }, 1000);
+      return () => {
+        clearInterval(id);
+      };
+    },
+    [dispatch]
+  );
+  return (
+    <div className="timer">
+      {" "}
+      {mins < 10 ? `0${mins}` : mins}:{secs < 10 ? `0${secs}` : secs}
+      </div>
+  );
 }
