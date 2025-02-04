@@ -8,6 +8,7 @@ import Question from "./Question.js";
 import NextQuestion from "./NextQuestion.js";
 import Progress from "./Progress.js";
 import Finished from "./FInished.js";
+import Footer from "./Footer.js";
 const initialState = {
   questions: [],
   // 'loading' , 'error' , 'ready' , 'active' , 'finished'
@@ -108,19 +109,22 @@ function App() {
             />
           </>
         )}
-        <NextQuestion
-          dispatch={dispatch}
-          answerIndex={answerIndex}
-          index={index}
-        />
-        {status === "finished" && (
-          <Finished
-            points={points}
-            totalPoints={totalPoints}
-            highscore={highscore}
+        <Footer>
+          <NextQuestion
             dispatch={dispatch}
+            answerIndex={answerIndex}
+            index={index}
           />
-        )}
+
+          {status === "finished" && (
+            <Finished
+              points={points}
+              totalPoints={totalPoints}
+              highscore={highscore}
+              dispatch={dispatch}
+            />
+          )}
+        </Footer>
       </Main>
     </div>
   );
