@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { useQuizContext } from "./useQuizContext";
+import { useQuizContext } from "./QuizContext";
 
 export default function Finished() {
   const { points, totalPoints, highscore, dispatch } = useQuizContext();

@@ -1,6 +1,6 @@
 import React from "react";
 import Options from "./Options";
-import { useQuizContext } from "./useQuizContext";
+import { useQuizContext } from "./QuizContext";
 export default function Question() {
   const { questions, index } = useQuizContext();
   if (!questions.length || !questions[index]) return null;

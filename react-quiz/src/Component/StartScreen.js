@@ -1,6 +1,6 @@
-// import React, { useCallback, useContext } from "react";
-import { useQuizContext } from "./useQuizContext";
+import { useQuizContext } from "./QuizContext";
 
+// import React, { useCallback, useContext } from "react";
 export default function StartScreen() {
   const { numQuestions, dispatch } = useQuizContext();
   return (
