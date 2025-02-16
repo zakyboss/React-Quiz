@@ -1,8 +1,8 @@
 import React from "react";
 import "../index.css";
-import { useQuizContext } from "./useQuizContext";
-export default function Options({question}) {
-  const {  dispatch, answerIndex } = useQuizContext();
+import { useQuizContext } from "./QuizContext";
+export default function Options({ question }) {
+  const { dispatch, answerIndex } = useQuizContext();
   console.log(question.options);
   const hasAnswered = answerIndex !== null;
   return (
