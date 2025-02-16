@@ -1,6 +1,13 @@
-import React from "react";
-
-export default function Progress({ index, numQuestions, points, totalPoints }) {
+import React, { useContext } from "react";
+// import 
+  import { useQuizContext } from "./useQuizContext";
+export default function Progress() {
+  const {
+    index,
+    numQuestions: numQuestions,
+    points: points,
+    totalPoints: totalPoints,
+  } = useQuizContext()
   return (
     <div>
       <header className="progress">

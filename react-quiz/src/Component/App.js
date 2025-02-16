@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from "react";
+import { createContext, useEffect, useReducer } from "react";
 import Header from "./Header.js";
 import Main from "./Main.js";
 import Loader from "./Loader.js";
@@ -72,6 +72,8 @@ function reducer(state, action) {
       throw new Error("Action unknown");
   }
 }
+const QuizContext = createContext();
+export { QuizContext };
 function App() {
   const [
     {
@@ -82,6 +84,7 @@ function App() {
       points,
       highscore,
       secondsRemaining,
+  
     },
     dispatch,
   ] = useReducer(reducer, initialState);
@@ -109,50 +112,43 @@ function App() {
   }, []);
   return (
     <div className="app">
-      <Header />
-      <Main>
-        {status === "loading" && <Loader />}
-        {status === "error" && <Error />}
-        {status === "ready" && (
-          <StartScreen numQuestions={numQuestions} dispatch={dispatch} />
-        )}
-        {status === "active" && (
-          <>
-            <Progress
-              index={index}
-              numQuestions={numQuestions}
-              points={points}
-              totalPoints={totalPoints}
-            />
-            <Question
-              question={questions[index]}
-              dispatch={dispatch}
-              answerIndex={answerIndex}
-            />
-          </>
-        )}
-        <Footer>
-          <NextQuestion
-            dispatch={dispatch}
-            answerIndex={answerIndex}
-            index={index}
-          />
+      <QuizContext.Provider
+        value={{
+          questions,
+          status,
+          index,
+          answerIndex,
+          points,
+          highscore,
+          secondsRemaining,
+          dispatch,
+          totalPoints,
+          numQuestions,
+        }}
+      >
+        <Header />
+        <Main>
+          {status === "loading" && <Loader />}
+          {status === "error" && <Error />}
+          {status === "ready" && <StartScreen />}
+          {status === "active" && (
+            <>
+              <Progress />
+              <Question
+                question={questions[index]}
+                dispatch={dispatch}
+                answerIndex={answerIndex}
+              />
+            </>
+          )}
+          <Footer>
+            <NextQuestion />
 
-          {status === "finished" && (
-            <Finished
-              points={points}
-              totalPoints={totalPoints}
-              highscore={highscore}
-              dispatch={dispatch}
-            />
-          )}
-          {status === "active" ? (
-            <Timer secondsRemaining={secondsRemaining} dispatch={dispatch} />
-          ) : (
-            ""
-          )}
-        </Footer>
-      </Main>
+            {status === "finished" && <Finished />}
+            {status === "active" ? <Timer /> : ""}
+          </Footer>
+        </Main>
+      </QuizContext.Provider>
     </div>
   );
 }
